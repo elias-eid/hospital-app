@@ -38,5 +38,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=hospital_db
+      - TZ=America/New_York
     ports:
       - "5432:5432"
