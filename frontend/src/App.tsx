@@ -6,6 +6,7 @@ import Navbar from './components/navbar/Navbar';
 import Home from './pages/Home';
 import Wards from './pages/Wards';
 import Nurses from './pages/Nurses';
+import { Box } from '@mui/material';
 
 const App = () => {
   return (
@@ -13,13 +14,19 @@ const App = () => {
           <ThemeProvider theme={theme}>
               <CssBaseline />
               <Navbar />
-              <div style={{ padding: '20px' }}>
-                  <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/wards" element={<Wards />} />
-                      <Route path="/nurses" element={<Nurses />} />
-                  </Routes>
-              </div>
+              <Box sx={{
+                  maxWidth: '1800px', // You can adjust the max width according to your design
+                  margin: '0 auto',   // This will center the content horizontally
+                  padding: '0 16px',  // Add horizontal padding on smaller screens (adjust as needed)
+              }}>
+                  <div style={{ padding: '20px' }}>
+                      <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/wards" element={<Wards />} />
+                          <Route path="/nurses" element={<Nurses />} />
+                      </Routes>
+                  </div>
+              </Box>
           </ThemeProvider>
 
       </Router>

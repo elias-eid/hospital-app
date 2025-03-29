@@ -9,12 +9,18 @@ const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 // Get all wards
 export const getAllWards = async (req: Request, res: Response) => {
     try {
-        const wards = await knex('wards').select();
+        // Get wards along with the number of associated nurses
+        const wards = await knex('wards')
+            .leftJoin('nurses', 'wards.id', 'nurses.ward_id')
+            .select('wards.*', knex.raw('COUNT(nurses.id) as nurses_count'))
+            .groupBy('wards.id');
 
-        // Convert timestamps to EDT
+        // Convert timestamps to EDT and add the hasNurses field
         const updatedWards = wards.map(ward => {
             ward.created_at = moment(ward.created_at).tz('America/New_York').format();
             ward.modified_at = moment(ward.modified_at).tz('America/New_York').format();
+            ward.hasNurses = ward.nurses_count > 0; // Check if ward has nurses
+            delete ward.nurses_count; // Remove the nurses_count field
             return ward;
         });
 
