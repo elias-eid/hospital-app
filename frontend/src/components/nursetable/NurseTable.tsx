@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     DataGrid,
     GridColDef,
     GridActionsCellItem,
     GridToolbar,
     GridRowParams,
+    useGridApiRef
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,6 +19,24 @@ interface NurseTableProps {
 }
 
 const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => {
+    const apiRef = useGridApiRef();
+
+    // Save the grid state to localStorage when state changes
+    useEffect(() => {
+        const handleStateChange = (params: any) => {
+            localStorage.setItem('nursesTableState', JSON.stringify(params));
+        };
+
+        const unsubscribe = apiRef.current?.subscribeEvent('stateChange', handleStateChange);
+
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
+    }, [apiRef]);
+
+    // Retrieve saved state from localStorage (if exists)
+    const savedState = JSON.parse(localStorage.getItem('nursesTableState') || 'null');
+
     const columns: GridColDef<Nurse>[] = [
         {
             field: 'id',
@@ -90,6 +109,27 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
         },
     ];
 
+    const getInitialState = () => {
+        const defaultState = {
+            pagination: {
+                paginationModel: { pageSize: 10, page: 0 },
+            },
+            sorting: { sortModel: [{ field: 'full_name', sort: 'asc' }] },
+        };
+
+        if (!savedState) return defaultState;
+
+        return {
+            ...savedState,
+            pagination: {
+                paginationModel: {
+                    pageSize: savedState.pagination?.paginationModel?.pageSize || 10,
+                    page: savedState.pagination?.paginationModel?.page || 0,
+                },
+            },
+        };
+    };
+
     return (
         <Paper style={{ height: 600, width: '100%' }}>
             <DataGrid
@@ -99,14 +139,8 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { pageSize: 10, page: 0 },  // Default page size
-                    },
-                    sorting: {
-                        sortModel: [{ field: 'full_name', sort: 'asc' }],
-                    },
-                }}
+                apiRef={apiRef}
+                initialState={getInitialState()}
                 disableColumnMenu={false}
                 disableColumnSelector={false}
                 disableDensitySelector={false}

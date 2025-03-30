@@ -15,9 +15,9 @@ const App = () => {
               <CssBaseline />
               <Navbar />
               <Box sx={{
-                  maxWidth: '1800px', // You can adjust the max width according to your design
-                  margin: '0 auto',   // This will center the content horizontally
-                  padding: '0 16px',  // Add horizontal padding on smaller screens (adjust as needed)
+                  maxWidth: '1800px',
+                  margin: '0 auto',
+                  padding: '0 16px',
               }}>
                   <div style={{ padding: '20px' }}>
                       <Routes>
