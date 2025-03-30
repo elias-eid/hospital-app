@@ -12,9 +12,7 @@ const router = express.Router();
 router.get('/', getAllNurses);
 router.get('/:id', getNurseById);
 router.post('/', createNurse);
-router.get('/', getAllNurses);
 router.get('/:id', getNurseById);
-router.post('/', createNurse);
 router.put('/:id', updateNurse);
 router.delete('/:id', deleteNurse);
 

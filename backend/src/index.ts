@@ -17,7 +17,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }));
 
-
 // Register routes
 app.use('/api/nurses', nurseRoutes);
 app.use('/api/wards', wardRoutes);

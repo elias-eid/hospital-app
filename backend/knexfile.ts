@@ -1,13 +1,13 @@
-import type { Knex } from "knex";
+import type { Knex } from "knex"
 
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",
     connection: {
-      host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASSWORD || "postgres",
-      database: process.env.DB_NAME || "hospital_db",
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       timezone: 'America/New_York'
     },
     migrations: {

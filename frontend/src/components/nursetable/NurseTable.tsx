@@ -8,31 +8,51 @@ import {
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Ward } from '../../types';
-import { Tooltip, Paper } from '@mui/material';
+import { Nurse } from '../../types';
+import { Paper } from '@mui/material';
 
-interface WardTableProps {
-    wards: Ward[];
-    onEdit: (ward: Ward) => void;
+interface NurseTableProps {
+    nurses: Nurse[];
+    onEdit: (nurse: Nurse) => void;
     onDelete: (id: number, name: string) => void;
 }
 
-const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
-    const columns: GridColDef<Ward>[] = [
+const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => {
+    const columns: GridColDef<Nurse>[] = [
         {
             field: 'id',
             headerName: 'ID',
             width: 70
         },
         {
-            field: 'name',
-            headerName: 'Name',
+            field: 'employee_id',
+            headerName: 'Employee ID',
             width: 150
         },
         {
-            field: 'color',
-            headerName: 'Color',
-            width: 120
+            field: 'first_name',
+            headerName: 'First Name',
+            width: 150
+        },
+        {
+            field: 'last_name',
+            headerName: 'Last Name',
+            width: 150
+        },
+        {
+            field: 'full_name',
+            headerName: 'Full Name',
+            width: 150
+        },
+        {
+            field: 'ward_name',
+            headerName: 'Ward',
+            width: 150
+        },
+        {
+            field: 'email',
+            headerName: 'Email',
+            width: 200
         },
         {
             field: 'created_at',
@@ -51,27 +71,21 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
             headerName: 'Actions',
             type: 'actions',
             width: 120,
-            getActions: (params: GridRowParams<Ward>) => [
+            getActions: (params: GridRowParams<Nurse>) => [
                 <GridActionsCellItem
                     icon={<EditIcon />}
                     label="Edit"
                     onClick={() => onEdit(params.row)}
                     color="inherit"
                 />,
-                <Tooltip
-                    title={params.row.hasNurses ? `${params.row.name} cannot be deleted because it has nurses.` : ''}
-                    arrow
-                >
-                    <span>
-                        <GridActionsCellItem
-                            icon={<DeleteIcon />}
-                            label="Delete"
-                            onClick={() => onDelete(params.row.id, params.row.name)}
-                            disabled={params.row.hasNurses}
-                            color="inherit"
-                        />
-                    </span>
-                </Tooltip>
+                <span>
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={() => onDelete(params.row.id, params.row.full_name)}
+                        color="inherit"
+                    />
+                </span>
             ],
         },
     ];
@@ -79,7 +93,7 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
     return (
         <Paper style={{ height: 600, width: '100%' }}>
             <DataGrid
-                rows={wards}
+                rows={nurses}
                 columns={columns}
                 pageSizeOptions={[5, 10, 25]}
                 slots={{
@@ -90,7 +104,7 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
                         paginationModel: { pageSize: 10, page: 0 },  // Default page size
                     },
                     sorting: {
-                        sortModel: [{ field: 'id', sort: 'asc' }],
+                        sortModel: [{ field: 'full_name', sort: 'asc' }],
                     },
                 }}
                 disableColumnMenu={false}
@@ -101,4 +115,4 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
     );
 };
 
-export default WardTable;
+export default NurseTable;

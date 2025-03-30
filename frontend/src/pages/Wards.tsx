@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import WardTable from '../components/wardtable/WardTable';
 import WardForm from '../components/wardform/WardForm';
 import DeleteDialog from '../components/deletedialog/DeleteDialog';
 import SnackbarAlert from '../components/snackbaralert/SnackbarAlert';
 import {Box, CircularProgress, Dialog, DialogTitle, Fab, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { Ward } from '../types';
+import {Ward} from '../types';
 
 const Wards: React.FC = () => {
     const [wards, setWards] = useState<Ward[]>([]);
@@ -63,6 +63,7 @@ const Wards: React.FC = () => {
     };
 
     const handleSaveWard = async () => {
+        // Validation to ensure that the ward name and color are not empty
         let isValid = true;
 
         if (!wardName) {
@@ -83,7 +84,7 @@ const Wards: React.FC = () => {
             return;
         }
 
-        const newWard = { name: wardName, color };
+        const newWard = {name: wardName, color};
         try {
             const response = isEdit
                 ? await fetch(`http://localhost:5000/api/wards/${selectedWard?.id}`, {
@@ -106,7 +107,7 @@ const Wards: React.FC = () => {
                 setWards((prevWards) => {
                     if (isEdit) {
                         return prevWards.map((ward) =>
-                            ward.id === selectedWard?.id ? { ...ward, ...data } : ward
+                            ward.id === selectedWard?.id ? {...ward, ...data} : ward
                         );
                     } else {
                         return [...prevWards, data];
@@ -154,7 +155,7 @@ const Wards: React.FC = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <CircularProgress size={80} /> {/* Adjust the size here */}
+                    <CircularProgress size={80}/> {/* Adjust the size here */}
                 </Box>
             ) : (
                 <>
@@ -176,6 +177,7 @@ const Wards: React.FC = () => {
                             position: 'relative'
                         }}
                     >
+                        { /* FAB positioned in the bottom right corner to create new wards */}
                         <Fab
                             color="primary"
                             aria-label="create new ward"
@@ -186,7 +188,7 @@ const Wards: React.FC = () => {
                                 right: '0px'
                             }}
                         >
-                            <AddIcon />
+                            <AddIcon/>
                         </Fab>
                     </Box>
                 </>

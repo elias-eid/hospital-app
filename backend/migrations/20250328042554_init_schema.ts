@@ -39,7 +39,22 @@ export async function up(knex: Knex): Promise<void> {
         { employee_id: nanoid(10), first_name: "Jane", last_name: "Doe", email: "jane.doe@example.com", ward_id: 2 },
         { employee_id: nanoid(10), first_name: "Alice", last_name: "Smith", email: "alice.smith@example.com", ward_id: 3 },
         { employee_id: nanoid(10), first_name: "Bob", last_name: "Johnson", email: "bob.johnson@example.com", ward_id: 4 },
-        { employee_id: nanoid(10), first_name: "Charlie", last_name: "Brown", email: "charlie.brown@example.com", ward_id: 5 }
+        { employee_id: nanoid(10), first_name: "Charlie", last_name: "Brown", email: "charlie.brown@example.com", ward_id: 5 },
+        { employee_id: nanoid(10), first_name: "Emma", last_name: "Wilson", email: "emma.wilson@example.com", ward_id: 1 },
+        { employee_id: nanoid(10), first_name: "Liam", last_name: "Martinez", email: "liam.martinez@example.com", ward_id: 2 },
+        { employee_id: nanoid(10), first_name: "Olivia", last_name: "Anderson", email: "olivia.anderson@example.com", ward_id: 3 },
+        { employee_id: nanoid(10), first_name: "Noah", last_name: "Thomas", email: "noah.thomas@example.com", ward_id: 4 },
+        { employee_id: nanoid(10), first_name: "Sophia", last_name: "Garcia", email: "sophia.garcia@example.com", ward_id: 5 },
+        { employee_id: nanoid(10), first_name: "Mason", last_name: "Taylor", email: "mason.taylor@example.com", ward_id: 1 },
+        { employee_id: nanoid(10), first_name: "Isabella", last_name: "Hernandez", email: "isabella.hernandez@example.com", ward_id: 2 },
+        { employee_id: nanoid(10), first_name: "James", last_name: "Moore", email: "james.moore@example.com", ward_id: 3 },
+        { employee_id: nanoid(10), first_name: "Ava", last_name: "Rodriguez", email: "ava.rodriguez@example.com", ward_id: 4 },
+        { employee_id: nanoid(10), first_name: "Elijah", last_name: "Lopez", email: "elijah.lopez@example.com", ward_id: 5 },
+        { employee_id: nanoid(10), first_name: "Lucas", last_name: "Gonzalez", email: "lucas.gonzalez@example.com", ward_id: 1 },
+        { employee_id: nanoid(10), first_name: "Mia", last_name: "Perez", email: "mia.perez@example.com", ward_id: 2 },
+        { employee_id: nanoid(10), first_name: "Ethan", last_name: "Walker", email: "ethan.walker@example.com", ward_id: 3 },
+        { employee_id: nanoid(10), first_name: "Harper", last_name: "Hall", email: "harper.hall@example.com", ward_id: 4 },
+        { employee_id: nanoid(10), first_name: "Benjamin", last_name: "Young", email: "benjamin.young@example.com", ward_id: 5 }
     ]);
 }
 
