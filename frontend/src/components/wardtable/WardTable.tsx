@@ -21,10 +21,10 @@ interface WardTableProps {
 const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
     const apiRef = useGridApiRef();
 
-    // Save the grid state to localStorage when state changes
+    // Save the grid state to sessionStorage when state changes
     useEffect(() => {
         const handleStateChange = (params: any) => {
-            localStorage.setItem('wardsTableState', JSON.stringify(params));
+            sessionStorage.setItem('wardsTableState', JSON.stringify(params));
         };
 
         const unsubscribe = apiRef.current?.subscribeEvent('stateChange', handleStateChange);
@@ -34,8 +34,8 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
         };
     }, [apiRef]);
 
-    // Retrieve saved state from localStorage (if exists)
-    const savedState = JSON.parse(localStorage.getItem('wardsTableState') || 'null');
+    // Retrieve saved state from sessionStorage (if it exists)
+    const savedState = JSON.parse(sessionStorage.getItem('wardsTableState') || 'null');
 
     const columns: GridColDef<Ward>[] = [
         {

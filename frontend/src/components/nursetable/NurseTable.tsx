@@ -21,10 +21,10 @@ interface NurseTableProps {
 const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => {
     const apiRef = useGridApiRef();
 
-    // Save the grid state to localStorage when state changes
+    // Save the grid state to sessionStorage when state changes
     useEffect(() => {
         const handleStateChange = (params: any) => {
-            localStorage.setItem('nursesTableState', JSON.stringify(params));
+            sessionStorage.setItem('nursesTableState', JSON.stringify(params));
         };
 
         const unsubscribe = apiRef.current?.subscribeEvent('stateChange', handleStateChange);
@@ -34,8 +34,8 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
         };
     }, [apiRef]);
 
-    // Retrieve saved state from localStorage (if exists)
-    const savedState = JSON.parse(localStorage.getItem('nursesTableState') || 'null');
+    // Retrieve saved state from sessionStorage (if it exists)
+    const savedState = JSON.parse(sessionStorage.getItem('nursesTableState') || 'null');
 
     const columns: GridColDef<Nurse>[] = [
         {
