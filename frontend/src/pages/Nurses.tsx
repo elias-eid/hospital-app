@@ -1,16 +1,16 @@
-import React, {useState, useEffect} from 'react';
+// Nurses.tsx
+import React, { useState } from 'react';
 import NurseTable from '../components/nursetable/NurseTable';
 import NurseForm from '../components/nurseform/NurseForm';
 import DeleteDialog from '../components/deletedialog/DeleteDialog';
 import SnackbarAlert from '../components/snackbaralert/SnackbarAlert';
 import {Box, CircularProgress, Dialog, DialogTitle, Fab, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {Nurse, Ward} from '../types';
+import { useNurses } from '../contexts/NursesContext';
+import { Nurse } from '../types';
 
 const Nurses: React.FC = () => {
-    const [nurses, setNurses] = useState<Nurse[]>([]);
-    const [wards, setWards] = useState<Ward[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { nurses, wards, loading, refreshNurses } = useNurses();
     const [open, setOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedNurse, setSelectedNurse] = useState<Nurse | null>(null);
@@ -28,27 +28,6 @@ const Nurses: React.FC = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [nurseResponse, wardResponse] = await Promise.all([
-                    fetch('http://localhost:5000/api/nurses'),
-                    fetch('http://localhost:5000/api/wards')
-                ]);
-                const nurseData: Nurse[] = await nurseResponse.json();
-                const wardData: Ward[] = await wardResponse.json();
-                setNurses(nurseData);
-                setWards(wardData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    // Function used to open create/edit dialog
     const handleOpen = (nurse?: Nurse) => {
         if (nurse) {
             setIsEdit(true);
@@ -67,7 +46,6 @@ const Nurses: React.FC = () => {
         setOpen(true);
     };
 
-    // Function to close create/edit and delete dialogs
     const handleClose = () => {
         setOpen(false);
         setSelectedNurse(null);
@@ -81,15 +59,12 @@ const Nurses: React.FC = () => {
         setErrorWard(null);
     };
 
-    // Email validation function
     const validateEmail = (email: string): boolean => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
 
-    // Function to handle saving a nurse (w/ validation)
     const handleSaveNurse = async () => {
-        // Validation to ensure that first name, last
         let isValid = true;
         if (!firstName) {
             setErrorFirstName('First name cannot be empty');
@@ -140,13 +115,8 @@ const Nurses: React.FC = () => {
                     body: JSON.stringify(newNurse),
                 });
 
-            const data = await response.json();
             if (response.ok) {
-                setNurses((prevNurses) =>
-                    isEdit
-                        ? prevNurses.map((nurse) => (nurse.id === selectedNurse?.id ? {...nurse, ...data} : nurse))
-                        : [...prevNurses, data]
-                );
+                await refreshNurses();
                 handleClose();
                 setSnackbarMessage(isEdit ? 'Nurse updated successfully' : 'Nurse created successfully');
                 setSnackbarOpen(true);
@@ -159,12 +129,11 @@ const Nurses: React.FC = () => {
         }
     };
 
-    // Function to delete a nurse
     const handleDeleteNurse = async (id: number) => {
         try {
             const response = await fetch(`http://localhost:5000/api/nurses/${id}`, {method: 'DELETE'});
             if (response.ok) {
-                setNurses((prevNurses) => prevNurses.filter((nurse) => nurse.id !== id));
+                await refreshNurses();
                 setDeleteDialogOpen(false);
                 setSnackbarMessage('Nurse deleted successfully');
                 setSnackbarOpen(true);
@@ -190,7 +159,6 @@ const Nurses: React.FC = () => {
                         setDeleteNurseName(name);
                         setDeleteDialogOpen(true);
                     }}/>
-                    { /* FAB positioned in the bottom right corner to create new nurses */}
                     <Box sx={{position: 'relative', height: '15vh', maxWidth: '1800px', margin: '0 auto'}}>
                         <Fab color="primary" aria-label="create new nurse" onClick={() => handleOpen()}
                              style={{position: 'absolute', bottom: '20px', right: '0px'}}>

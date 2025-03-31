@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import WardTable from '../components/wardtable/WardTable';
 import WardForm from '../components/wardform/WardForm';
 import DeleteDialog from '../components/deletedialog/DeleteDialog';
 import SnackbarAlert from '../components/snackbaralert/SnackbarAlert';
 import {Box, CircularProgress, Dialog, DialogTitle, Fab, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {Ward} from '../types';
+import { useWards } from '../contexts/WardsContext';
+import { Ward } from '../types'
 
 const Wards: React.FC = () => {
-    const [wards, setWards] = useState<Ward[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { wards, loading, refreshWards } = useWards();
     const [open, setOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
@@ -22,22 +22,6 @@ const Wards: React.FC = () => {
     const [deleteWardName, setDeleteWardName] = useState<string>('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-
-    useEffect(() => {
-        const fetchWards = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/wards');
-                const data: Ward[] = await response.json();
-                setWards(data);
-            } catch (error) {
-                console.error('Error fetching wards:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchWards();
-    }, []);
 
     const handleOpen = (ward?: Ward) => {
         if (ward) {
@@ -63,7 +47,6 @@ const Wards: React.FC = () => {
     };
 
     const handleSaveWard = async () => {
-        // Validation to ensure that the ward name and color are not empty
         let isValid = true;
 
         if (!wardName) {
@@ -102,17 +85,8 @@ const Wards: React.FC = () => {
                     body: JSON.stringify(newWard),
                 });
 
-            const data = await response.json();
             if (response.ok) {
-                setWards((prevWards) => {
-                    if (isEdit) {
-                        return prevWards.map((ward) =>
-                            ward.id === selectedWard?.id ? {...ward, ...data} : ward
-                        );
-                    } else {
-                        return [...prevWards, data];
-                    }
-                });
+                await refreshWards();
                 handleClose();
                 setSnackbarMessage(isEdit ? 'Ward updated successfully' : 'Ward created successfully');
                 setSnackbarOpen(true);
@@ -132,7 +106,7 @@ const Wards: React.FC = () => {
             });
 
             if (response.ok) {
-                setWards((prevWards) => prevWards.filter((ward) => ward.id !== id));
+                await refreshWards();
                 setDeleteDialogOpen(false);
                 setSnackbarMessage('Ward deleted successfully');
                 setSnackbarOpen(true);
@@ -155,7 +129,7 @@ const Wards: React.FC = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <CircularProgress size={80}/> {/* Adjust the size here */}
+                    <CircularProgress size={80}/>
                 </Box>
             ) : (
                 <>

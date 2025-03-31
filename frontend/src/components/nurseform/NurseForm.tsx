@@ -8,8 +8,10 @@ import {
     Button,
     DialogActions,
     DialogContent,
-    Typography
+    Typography,
+    Box
 } from '@mui/material';
+import { Ward } from '../../types';
 
 interface NurseFormProps {
     firstName: string;
@@ -20,7 +22,7 @@ interface NurseFormProps {
     setEmail: (email: string) => void;
     wardId: number | "";
     setWardId: (id: number | "") => void;
-    wards: { id: number; name: string }[];
+    wards: Ward[];
     errorFirstName: string | null;
     errorLastName: string | null;
     errorEmail: string | null;
@@ -85,10 +87,38 @@ const NurseForm: React.FC<NurseFormProps> = ({
                     value={wardId}
                     onChange={(e) => setWardId(e.target.value === "" ? "" : Number(e.target.value))}
                     label="Ward"
+                    renderValue={(selected) => {
+                        const selectedWard = wards.find(w => w.id === selected);
+                        return (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {selectedWard && (
+                                    <>
+                                        <div style={{
+                                            backgroundColor: selectedWard.color,
+                                            width: '20px',
+                                            height: '20px',
+                                            borderRadius: '50%',
+                                            border: '1px solid #ddd'
+                                        }} />
+                                        <span>{selectedWard.name}</span>
+                                    </>
+                                )}
+                            </Box>
+                        );
+                    }}
                 >
                     {wards.map((ward) => (
-                        <MenuItem key={ward.id} value={ward.id}>  {/* ward.id is now treated as number */}
-                            {ward.name}
+                        <MenuItem key={ward.id} value={ward.id}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <div style={{
+                                    backgroundColor: ward.color,
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    border: '1px solid #ddd'
+                                }} />
+                                <span>{ward.name}</span>
+                            </Box>
                         </MenuItem>
                     ))}
                 </Select>

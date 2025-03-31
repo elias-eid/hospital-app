@@ -8,7 +8,8 @@ import {
     Button,
     DialogActions,
     DialogContent,
-    Typography
+    Typography,
+    Box
 } from '@mui/material';
 
 interface WardFormProps {
@@ -32,6 +33,8 @@ const WardForm: React.FC<WardFormProps> = ({
                                                onSave,
                                                onCancel
                                            }) => {
+    const colors = ['Red', 'Green', 'Blue', 'Yellow'];
+
     return (
         <DialogContent>
             <TextField
@@ -51,11 +54,33 @@ const WardForm: React.FC<WardFormProps> = ({
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
                     label="Color"
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <div style={{
+                                backgroundColor: selected,
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd'
+                            }} />
+                            <span>{selected}</span>
+                        </Box>
+                    )}
                 >
-                    <MenuItem value="Red">Red</MenuItem>
-                    <MenuItem value="Green">Green</MenuItem>
-                    <MenuItem value="Blue">Blue</MenuItem>
-                    <MenuItem value="Yellow">Yellow</MenuItem>
+                    {colors.map((colorName) => (
+                        <MenuItem key={colorName} value={colorName}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <div style={{
+                                    backgroundColor: colorName,
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    border: '1px solid #ddd'
+                                }} />
+                                <span>{colorName}</span>
+                            </Box>
+                        </MenuItem>
+                    ))}
                 </Select>
                 {errorColor && <Typography variant="body2" color="error">{errorColor}</Typography>}
             </FormControl>

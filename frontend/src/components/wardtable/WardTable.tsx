@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
     DataGrid,
     GridColDef,
@@ -9,8 +9,8 @@ import {
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Ward} from '../../types';
-import {Tooltip, Paper} from '@mui/material';
+import { Ward } from '../../types';
+import { Tooltip, Paper, Box } from '@mui/material';
 
 interface WardTableProps {
     wards: Ward[];
@@ -18,7 +18,7 @@ interface WardTableProps {
     onDelete: (id: number, name: string) => void;
 }
 
-const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
+const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
     const apiRef = useGridApiRef();
 
     // Save the grid state to sessionStorage when state changes
@@ -35,7 +35,8 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
     }, [apiRef]);
 
     // Retrieve saved state from sessionStorage (if it exists)
-    const savedState = JSON.parse(sessionStorage.getItem('wardsTableState') || 'null');
+    const savedStateString = sessionStorage.getItem('wardsTableState');
+    const savedState = savedStateString ? JSON.parse(savedStateString) : null;
 
     const columns: GridColDef<Ward>[] = [
         {
@@ -51,7 +52,19 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
         {
             field: 'color',
             headerName: 'Color',
-            width: 120,
+            width: 180,
+            renderCell: (params) => (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <div style={{
+                        backgroundColor: params.value,
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        border: '1px solid #ddd'
+                    }} />
+                    <span>{params.value}</span>
+                </Box>
+            )
         },
         {
             field: 'created_at',
@@ -72,10 +85,11 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
             width: 120,
             getActions: (params: GridRowParams<Ward>) => [
                 <GridActionsCellItem
-                    icon={<EditIcon/>}
+                    icon={<EditIcon />}
                     label="Edit"
                     onClick={() => onEdit(params.row)}
                     color="inherit"
+                    showInMenu={false}
                 />,
                 <Tooltip
                     title={
@@ -87,11 +101,12 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
                 >
                     <span>
                         <GridActionsCellItem
-                            icon={<DeleteIcon/>}
+                            icon={<DeleteIcon />}
                             label="Delete"
                             onClick={() => onDelete(params.row.id, params.row.name)}
                             disabled={params.row.hasNurses}
                             color="inherit"
+                            showInMenu={false}
                         />
                     </span>
                 </Tooltip>,
@@ -121,7 +136,7 @@ const WardTable: React.FC<WardTableProps> = ({wards, onEdit, onDelete}) => {
     };
 
     return (
-        <Paper style={{height: 600, width: '100%'}}>
+        <Paper style={{ height: 600, width: '100%' }}>
             <DataGrid
                 rows={wards}
                 columns={columns}
