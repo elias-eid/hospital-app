@@ -1,3 +1,17 @@
+/**
+ * Wards Context Provider Component
+ *
+ * Provides access to ward data with:
+ * - Fetching and updating ward records
+ * - Persistent loading state during data fetching
+ * - Method to refresh ward data
+ *
+ * @component
+ * @param {React.ReactNode} children - Child components that can consume the context
+ *
+ * @returns {WardsContextType} Wards context containing wards, loading state, and refresh function
+ */
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Ward } from '../types';
 

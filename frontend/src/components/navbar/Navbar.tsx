@@ -1,3 +1,12 @@
+/**
+ * Main Navigation Bar Component
+ *
+ * Provides persistent app navigation with styled route buttons.
+ *
+ * @component
+ * @returns {JSX.Element} - Sticky app bar with navigation buttons
+ */
+
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useTheme, Theme} from '@mui/material/styles';

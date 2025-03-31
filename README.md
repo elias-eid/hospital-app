@@ -43,3 +43,11 @@ You will need to have Docker installed on your local machine to run this applica
         docker-compose exec backend npx knex migrate:latest
     ```
 6. The application will be accessible by navigation to `localhost:3000` in a browser window.
+
+Subsequently, you can bring the container down and up as needed:
+```bash
+    docker-compose down
+```
+```bash
+  docker-compose compose up
+```

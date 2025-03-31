@@ -1,3 +1,16 @@
+/**
+ * Wards Page Component
+ *
+ * Displays a list of ward records with options to create, edit or delete wards.
+ *
+ * @component
+ * @param {Ward[]} wards - Array of ward objects to be displayed in a table
+ * @param {boolean} loading - A flag indicating if the data is still being loaded
+ * @param {() => Promise<void>} refreshWards - Callback function to refresh the ward data
+ *
+ * @returns {JSX.Element} Wards page with ward management features
+ */
+
 import React, { useState } from 'react';
 import WardTable from '../components/wardtable/WardTable';
 import WardForm from '../components/wardform/WardForm';

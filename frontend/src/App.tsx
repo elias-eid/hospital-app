@@ -19,7 +19,7 @@ const App = () => {
                     <NursesProvider>
                         <Navbar />
                         <Box sx={{
-                            maxWidth: '1800px',
+                            maxWidth: '1800px', // limiting the maxWidth to avoid excessively large tables on ultra-wide displays
                             margin: '0 auto',
                             padding: '0 16px',
                         }}>

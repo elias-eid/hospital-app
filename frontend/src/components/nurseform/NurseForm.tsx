@@ -1,3 +1,31 @@
+/**
+ * Nurse Form Component
+ *
+ * A reusable form dialog for creating/editing nurse records with:
+ * - First name, last name, and email fields
+ * - Ward selection with visual color indicators
+ * - Form validation and error display
+ * - Cancel/Save actions
+ *
+ * @component
+ * @param {string} firstName - Current first name value
+ * @param {Function} setFirstName - First name setter function
+ * @param {string} lastName - Current last name value
+ * @param {Function} setLastName - Last name setter function
+ * @param {string} email - Current email value
+ * @param {Function} setEmail - Email setter function
+ * @param {number|""} wardId - Currently selected ward ID
+ * @param {Function} setWardId - Ward ID setter function
+ * @param {Ward[]} wards - Array of ward options for selection
+ * @param {string|null} errorFirstName - First name validation error
+ * @param {string|null} errorLastName - Last name validation error
+ * @param {string|null} errorEmail - Email validation error
+ * @param {string|null} errorWard - Ward selection validation error
+ * @param {Function} onSave - Save button handler
+ * @param {Function} onCancel - Cancel button handler
+ *
+ */
+
 import React from 'react';
 import {
     TextField,

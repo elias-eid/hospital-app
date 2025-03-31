@@ -1,3 +1,24 @@
+/**
+ * Ward Form Component
+ *
+ * A reusable form dialog for creating/editing ward records with:
+ * - Name field
+ * - Color selection with visual color indicators
+ * - Form validation and error display
+ * - Cancel/Save actions
+ *
+ * @component
+ * @param {string} wardName - Current ward name value
+ * @param {Function} setWardName - Ward name setter function
+ * @param {string} color - Currently selected color
+ * @param {Function} setColor - Color setter function
+ * @param {string|null} errorName - Ward name validation error
+ * @param {string|null} errorColor - Color selection validation error
+ * @param {Function} onSave - Save button handler
+ * @param {Function} onCancel - Cancel button handler
+ *
+ */
+
 import React from 'react';
 import {
     TextField,

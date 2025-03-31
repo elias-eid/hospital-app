@@ -1,3 +1,18 @@
+/**
+ * Nurse Data Table Component
+ *
+ * Displays a paginated, sortable table of nurse records with:
+ * - Persistent state management using sessionStorage
+ * - Built-in filtering and toolbar functionality
+ * - Edit/Delete action buttons
+ *
+ * @component
+ * @param {Nurse[]} nurses - Array of nurse objects to display
+ * @param {(nurse: Nurse) => void} onEdit - Callback when edit action is clicked
+ * @param {(id: number, name: string) => void} onDelete - Callback when delete action is clicked
+ *
+ */
+
 import React, {useEffect} from 'react';
 import {
     DataGrid,

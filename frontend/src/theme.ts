@@ -10,19 +10,7 @@ const theme = createTheme({
         secondary: {
             main: '#9c27b0', // secondary purple color
         },
-    },
-    typography: {
-        // Define any typography customizations here
-    },
-    components: {
-        MuiCssBaseline: {
-            styleOverrides: {
-                ':root': {
-                    '--primary-color': '#1976d2', // Use primary color in CSS variables
-                },
-            },
-        },
-    },
+    }
 });
 
 export default theme;

@@ -1,3 +1,17 @@
+/**
+ * Reusable Success Notification Component
+ *
+ * Displays temporary success messages in an MUI Snackbar with:
+ * - Auto-hide after 6 seconds
+ * - Close button functionality
+ *
+ * @component
+ * @param {boolean} open - Controls visibility of the snackbar
+ * @param {string} message - Notification message content
+ * @param {() => void} onClose - Callback when snackbar closes
+ *
+ */
+
 import React from 'react';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';

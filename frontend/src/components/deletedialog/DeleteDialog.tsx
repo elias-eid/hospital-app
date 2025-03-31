@@ -1,3 +1,14 @@
+/**
+ * Confirmation Dialog for Delete Actions
+ *
+ * Reusable modal dialog that prompts users to confirm deletion of an item (Nurse or Ward).
+ *
+ * @component
+ * @param {boolean} open - Controls dialog visibility
+ * @param {() => void} onClose - Callback when dialog is closed/canceled
+ * @param {() => void} onConfirm - Callback when deletion is confirmed
+ * @param {string} objectName - Name of the item being deleted (displayed in message)
+ */
 import React from 'react';
 import { Dialog, DialogActions, DialogTitle, Button } from '@mui/material';
 

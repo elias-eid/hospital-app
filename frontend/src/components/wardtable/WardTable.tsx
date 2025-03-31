@@ -1,3 +1,18 @@
+/**
+ * Ward Data Table Component
+ *
+ * Displays a paginated, sortable table of ward records with:
+ * - Persistent state management using sessionStorage
+ * - Built-in filtering and toolbar functionality
+ * - Edit/Delete action buttons with deletion restrictions for wards with nurses
+ *
+ * @component
+ * @param {Ward[]} wards - Array of ward objects to display
+ * @param {(ward: Ward) => void} onEdit - Callback when edit action is clicked
+ * @param {(id: number, name: string) => void} onDelete - Callback when delete action is clicked
+ *
+ */
+
 import React, { useEffect } from 'react';
 import {
     DataGrid,

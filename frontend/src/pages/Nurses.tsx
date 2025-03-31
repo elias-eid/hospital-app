@@ -1,4 +1,16 @@
-// Nurses.tsx
+/**
+ * Nurses Page Component
+ *
+ * Displays a paginated list of nurse records with options to create, edit or delete nurses.
+ *
+ * @component
+ * @param {Nurse[]} nurses - Array of nurse objects to be displayed in a table
+ * @param {boolean} loading - A flag indicating if the data is still being loaded
+ * @param {() => Promise<void>} refreshNurses - Callback function to refresh the nurse data
+ *
+ * @returns {JSX.Element} Nurses page with nurse management features
+ */
+
 import React, { useState } from 'react';
 import NurseTable from '../components/nursetable/NurseTable';
 import NurseForm from '../components/nurseform/NurseForm';

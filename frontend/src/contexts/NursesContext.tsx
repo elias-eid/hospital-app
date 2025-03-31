@@ -1,4 +1,18 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+/**
+ * Nurses Context Provider Component
+ *
+ * Provides access to nurse data with:
+ * - Fetching and updating nurse records
+ * - Persistent loading state during data fetching
+ * - Method to refresh nurse data
+ *
+ * @component
+ * @param {React.ReactNode} children - Child components that can consume the context
+ *
+ * @returns {NursesContextType} Nurses context containing nurses, wards, loading state, and refresh functions
+ */
+
+import React, {createContext, useContext, useState, useEffect, useCallback} from 'react';
 import { Nurse, Ward } from '../types';
 
 interface NursesContextType {
@@ -36,18 +50,18 @@ export const NursesProvider: React.FC<{children: React.ReactNode}> = ({ children
         }
     };
 
-    const fetchAllData = async () => {
+    const fetchAllData = useCallback(async () => {
         setLoading(true);
         try {
             await Promise.all([fetchNurses(), fetchWards()]);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchAllData();
-    }, []);
+    }, [fetchAllData]);
 
     return (
         <NursesContext.Provider value={{
