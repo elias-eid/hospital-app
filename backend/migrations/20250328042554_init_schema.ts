@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("name").notNullable();
         table.enum("color", ["Red", "Green", "Blue", "Yellow"]).notNullable();
         table.timestamp("created_at").defaultTo(knex.fn.now()); // Auto-populated on creation
-        table.timestamp("modified_at").defaultTo(knex.fn.now()); // Updated on modification (No need to use .alter() here)
+        table.timestamp("modified_at").defaultTo(knex.fn.now()); // Updated on modification
     });
 
     // Insert initial wards
@@ -29,8 +29,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string("last_name").notNullable();
         table.string("email").notNullable().unique();
         table.integer("ward_id").unsigned().notNullable().references("id").inTable("wards").onDelete("CASCADE");
-        table.timestamp("created_at").defaultTo(knex.fn.now());
-        table.timestamp("modified_at").defaultTo(knex.fn.now()); // Updated on modification (No need to use .alter() here)
+        table.timestamp("created_at").defaultTo(knex.fn.now()); // Auto-populated on creation
+        table.timestamp("modified_at").defaultTo(knex.fn.now()); // Updated on modification
     });
 
     // Insert initial nurses
@@ -56,6 +56,11 @@ export async function up(knex: Knex): Promise<void> {
         { employee_id: nanoid(10), first_name: "Harper", last_name: "Hall", email: "harper.hall@example.com", ward_id: 4 },
         { employee_id: nanoid(10), first_name: "Benjamin", last_name: "Young", email: "benjamin.young@example.com", ward_id: 5 }
     ]);
+
+    // Add index on ward_id for the nurses table (helpful for join)
+    await knex.schema.table("nurses", (table) => {
+        table.index("ward_id", "idx_nurses_ward_id");
+    });
 }
 
 export async function down(knex: Knex): Promise<void> {

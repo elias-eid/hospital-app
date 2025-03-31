@@ -59,6 +59,7 @@ const Wards: React.FC = () => {
         setErrorColor(null);
     };
 
+    // Function to handle saving a ward with proper validation
     const handleSaveWard = async () => {
         let isValid = true;
 
@@ -112,6 +113,7 @@ const Wards: React.FC = () => {
         }
     };
 
+    // Function to handle deleting a ward
     const handleDeleteWard = async (id: number) => {
         try {
             const response = await fetch(`http://localhost:5000/api/wards/${id}`, {

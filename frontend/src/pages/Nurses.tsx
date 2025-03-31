@@ -71,11 +71,28 @@ const Nurses: React.FC = () => {
         setErrorWard(null);
     };
 
+    // Check if email address is valid
     const validateEmail = (email: string): boolean => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
 
+    // Check if the email address is unique
+    const checkEmailUniqueness = async (email: string): Promise<boolean> => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/nurses/check-email?email=${encodeURIComponent(email)}`);
+            if (response.ok) {
+                const data = await response.json();
+                return data.exists;  // Return true if email exists
+            }
+            return false;  // False otherwise
+        } catch (error) {
+            console.error('Error checking email uniqueness', error);
+            return false;
+        }
+    };
+
+    // Function to handle saving a nurse with proper validation
     const handleSaveNurse = async () => {
         let isValid = true;
         if (!firstName) {
@@ -107,6 +124,13 @@ const Nurses: React.FC = () => {
         }
 
         if (!isValid) return;
+
+        // Check if email is unique before saving
+        const emailExists = await checkEmailUniqueness(email);
+        if (emailExists) {
+            setErrorEmail('Email is already in use');
+            return;
+        }
 
         const newNurse = {
             firstName,
@@ -141,6 +165,7 @@ const Nurses: React.FC = () => {
         }
     };
 
+    // Function used to delete a nurse
     const handleDeleteNurse = async (id: number) => {
         try {
             const response = await fetch(`http://localhost:5000/api/nurses/${id}`, {method: 'DELETE'});

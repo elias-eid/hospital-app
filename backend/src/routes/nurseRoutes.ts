@@ -5,14 +5,15 @@ import {
     createNurse,
     updateNurse,
     deleteNurse,
+    checkEmailUniqueness,
 } from '../controllers/nurseController';
 
 const router = express.Router();
 
 router.get('/', getAllNurses);
+router.get('/check-email', checkEmailUniqueness);
 router.get('/:id', getNurseById);
 router.post('/', createNurse);
-router.get('/:id', getNurseById);
 router.put('/:id', updateNurse);
 router.delete('/:id', deleteNurse);
 

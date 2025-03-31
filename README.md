@@ -38,8 +38,9 @@ You will need to have Docker installed on your local machine to run this applica
     ```bash
        docker-compose up --build
     ```
-5. Once the backend server is up (`Server running on port 5000` will be shown in the logs), run the migrations:
+5. Once the backend server is up (`Server running on port 5000` will be shown in the logs), run the migrations in another terminal window:
     ```bash
+        cd hospital-app
         docker-compose exec backend npx knex migrate:latest
     ```
 6. The application will be accessible by navigation to `localhost:3000` in a browser window.

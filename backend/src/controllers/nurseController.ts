@@ -155,3 +155,19 @@ export const deleteNurse = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error deleting nurse' });
     }
 };
+
+// Check if the email address is unique
+export const checkEmailUniqueness = async (req: Request, res: Response): Promise<void> => {
+    const { email } = req.query;
+    console.log(email)
+    try {
+        const existingNurse = await knex('nurses').where({ email }).first();
+        console.log(existingNurse)
+        res.status(200).json({ exists: !!existingNurse });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error checking email uniqueness' });
+    }
+};
+
+
