@@ -19,6 +19,7 @@ export const getAllNurses = async (req: Request, res: Response) => {
                 'nurses.email',
                 'nurses.ward_id',
                 'wards.name as ward_name', // Grabbing the ward name from the wards table
+                'wards.color as ward_color', // Grabbing the ward color from the wards table
                 'nurses.created_at',
                 'nurses.modified_at',
             )
@@ -88,6 +89,7 @@ export const createNurse = async (req: Request, res: Response) => {
             ...newNurse,
             full_name: `${firstName} ${lastName}`,
             ward_name: ward?.name || 'Unknown',
+            ward_color: ward?.color || '#FFFFFF',
         });
     } catch (error) {
         await trx.rollback();
@@ -128,6 +130,7 @@ export const updateNurse = async (req: Request, res: Response) => {
                 ...updatedNurse[0],
                 full_name: `${updatedNurse[0].first_name} ${updatedNurse[0].last_name}`,
                 ward_name: ward?.name || 'Unknown',
+                ward_color: ward?.color || '#FFFFFF',
             });
         });
     } catch (error) {

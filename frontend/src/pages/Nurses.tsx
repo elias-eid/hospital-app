@@ -18,11 +18,11 @@ import DeleteDialog from '../components/deletedialog/DeleteDialog';
 import SnackbarAlert from '../components/snackbaralert/SnackbarAlert';
 import {Box, CircularProgress, Dialog, DialogTitle, Fab, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useNurses } from '../contexts/NursesContext';
+import { useApp } from '../contexts/AppContext';
 import { Nurse } from '../types';
 
 const Nurses: React.FC = () => {
-    const { nurses, wards, loading, refreshNurses } = useNurses();
+    const { nurses, wards, loading, refreshNurses, refreshWards } = useApp();
     const [open, setOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedNurse, setSelectedNurse] = useState<Nurse | null>(null);
@@ -220,8 +220,7 @@ const Nurses: React.FC = () => {
                     errorEmail,
                     errorWard,
                     onSave: handleSaveNurse,
-                    onCancel: handleClose,
-                    wards
+                    onCancel: handleClose
                 }} />
             </Dialog>
             <DeleteDialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}

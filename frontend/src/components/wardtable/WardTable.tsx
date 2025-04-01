@@ -20,7 +20,6 @@ import {
     GridActionsCellItem,
     GridToolbar,
     GridRowParams,
-    useGridApiRef
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,24 +33,36 @@ interface WardTableProps {
 }
 
 const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
-    const apiRef = useGridApiRef();
+    // Create a unique key based on ward IDs and timestamps
+    const dataKey = React.useMemo(() => {
+        return wards.map(w => `${w.id}-${w.modified_at}`).join('|');
+    }, [wards]);
 
-    // Save the grid state to sessionStorage when state changes
-    useEffect(() => {
-        const handleStateChange = (params: any) => {
-            sessionStorage.setItem('wardsTableState', JSON.stringify(params));
-        };
+    // Retrieve and parse saved state safely
+    const savedState = React.useMemo(() => {
+        try {
+            const state = JSON.parse(sessionStorage.getItem('wardsTableState') || '{}');
+            return {
+                ...state,
+                pagination: {
+                    paginationModel: {
+                        pageSize: state.pagination?.paginationModel?.pageSize || 10,
+                        page: state.pagination?.paginationModel?.page || 0,
+                    },
+                },
+            };
+        } catch {
+            return {
+                pagination: { paginationModel: { pageSize: 10 } },
+                sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+            };
+        }
+    }, []);
 
-        const unsubscribe = apiRef.current?.subscribeEvent('stateChange', handleStateChange);
-
-        return () => {
-            if (unsubscribe) unsubscribe();
-        };
-    }, [apiRef]);
-
-    // Retrieve saved state from sessionStorage (if it exists)
-    const savedStateString = sessionStorage.getItem('wardsTableState');
-    const savedState = savedStateString ? JSON.parse(savedStateString) : null;
+    // Handle state persistence on sort/filter/page change
+    const handleStateChange = (state: any) => {
+        sessionStorage.setItem('wardsTableState', JSON.stringify(state));
+    };
 
     const columns: GridColDef<Ward>[] = [
         {
@@ -107,6 +118,22 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
                     showInMenu={false}
                 />,
                 <Tooltip
+                    placement="top"
+                    slotProps={{
+                        tooltip: {
+                            sx: {
+                                backgroundColor: 'common.black',
+                                fontSize: '0.875rem',
+                                padding: '6px 12px',
+                                marginBottom: '8px !important'
+                            }
+                        },
+                        arrow: {
+                            sx: {
+                                color: 'common.black'
+                            }
+                        }
+                    }}
                     title={
                         params.row.hasNurses
                             ? `${params.row.name} cannot be deleted because it has nurses.`
@@ -129,27 +156,6 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
         },
     ];
 
-    const getInitialState = () => {
-        const defaultState = {
-            pagination: {
-                paginationModel: { pageSize: 10, page: 0 },
-            },
-            sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
-        };
-
-        if (!savedState) return defaultState;
-
-        return {
-            ...savedState,
-            pagination: {
-                paginationModel: {
-                    pageSize: savedState.pagination?.paginationModel?.pageSize || 10,
-                    page: savedState.pagination?.paginationModel?.page || 0,
-                },
-            },
-        };
-    };
-
     return (
         <Paper style={{ height: 600, width: '100%' }}>
             <DataGrid
@@ -159,11 +165,13 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                apiRef={apiRef}
-                initialState={getInitialState()}
+                initialState={savedState}
+                onStateChange={handleStateChange}
                 disableColumnMenu={false}
                 disableColumnSelector={false}
                 disableDensitySelector={false}
+                key={dataKey}
+                getRowId={(row) => row.id}
             />
         </Paper>
     );

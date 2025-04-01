@@ -37,9 +37,11 @@ import {
     DialogActions,
     DialogContent,
     Typography,
-    Box
+    Box,
+    Tooltip
 } from '@mui/material';
-import { Ward } from '../../types';
+import {Ward} from '../../types';
+import {useApp} from "../../contexts/AppContext";
 
 interface NurseFormProps {
     firstName: string;
@@ -50,7 +52,6 @@ interface NurseFormProps {
     setEmail: (email: string) => void;
     wardId: number | "";
     setWardId: (id: number | "") => void;
-    wards: Ward[];
     errorFirstName: string | null;
     errorLastName: string | null;
     errorEmail: string | null;
@@ -68,7 +69,6 @@ const NurseForm: React.FC<NurseFormProps> = ({
                                                  setEmail,
                                                  wardId,
                                                  setWardId,
-                                                 wards,
                                                  errorFirstName,
                                                  errorLastName,
                                                  errorEmail,
@@ -76,6 +76,9 @@ const NurseForm: React.FC<NurseFormProps> = ({
                                                  onSave,
                                                  onCancel
                                              }) => {
+
+    const { wards, loading } = useApp(); // Get wards from AppContext
+
     return (
         <DialogContent>
             <TextField
@@ -110,7 +113,7 @@ const NurseForm: React.FC<NurseFormProps> = ({
                 helperText={errorEmail}
             />
             <FormControl fullWidth margin="normal" error={!!errorWard}>
-                <InputLabel>Ward</InputLabel>
+                <InputLabel>Ward {loading && '(Loading...)'}</InputLabel>
                 <Select
                     value={wardId}
                     onChange={(e) => setWardId(e.target.value === "" ? "" : Number(e.target.value))}
@@ -120,17 +123,32 @@ const NurseForm: React.FC<NurseFormProps> = ({
                         return (
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 {selectedWard && (
-                                    <>
+                                    <Tooltip title={selectedWard.color} arrow placement="top" slotProps={{
+                                        tooltip: {
+                                            sx: {
+                                                backgroundColor: 'common.black',
+                                                fontSize: '0.875rem',
+                                                padding: '6px 12px',
+                                                marginBottom: '8px !important'
+                                            }
+                                        },
+                                        arrow: {
+                                            sx: {
+                                                color: 'common.black'
+                                            }
+                                        }
+                                    }}>
                                         <div style={{
                                             backgroundColor: selectedWard.color,
                                             width: '20px',
                                             height: '20px',
                                             borderRadius: '50%',
-                                            border: '1px solid #ddd'
-                                        }} />
-                                        <span>{selectedWard.name}</span>
-                                    </>
+                                            border: '1px solid #ddd',
+                                            cursor: 'help'
+                                        }}/>
+                                    </Tooltip>
                                 )}
+                                <span>{selectedWard?.name || ''}</span>
                             </Box>
                         );
                     }}
@@ -138,13 +156,30 @@ const NurseForm: React.FC<NurseFormProps> = ({
                     {wards.map((ward) => (
                         <MenuItem key={ward.id} value={ward.id}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <div style={{
-                                    backgroundColor: ward.color,
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    border: '1px solid #ddd'
-                                }} />
+                                <Tooltip title={ward.color} arrow placement="top" slotProps={{
+                                    tooltip: {
+                                        sx: {
+                                            backgroundColor: 'common.black',
+                                            fontSize: '0.875rem',
+                                            padding: '6px 12px',
+                                            marginBottom: '8px !important'
+                                        }
+                                    },
+                                    arrow: {
+                                        sx: {
+                                            color: 'common.black'
+                                        }
+                                    }
+                                }}>
+                                    <div style={{
+                                        backgroundColor: ward.color,
+                                        width: '20px',
+                                        height: '20px',
+                                        borderRadius: '50%',
+                                        border: '1px solid #ddd',
+                                        cursor: 'help'
+                                    }} />
+                                </Tooltip>
                                 <span>{ward.name}</span>
                             </Box>
                         </MenuItem>

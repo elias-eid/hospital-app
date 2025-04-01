@@ -24,8 +24,8 @@ import {
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Nurse } from '../../types';
-import { Paper } from '@mui/material';
+import {Nurse} from '../../types';
+import {Box, Paper, Tooltip} from '@mui/material';
 
 interface NurseTableProps {
     nurses: Nurse[];
@@ -33,24 +33,38 @@ interface NurseTableProps {
     onDelete: (id: number, name: string) => void;
 }
 
-const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => {
-    const apiRef = useGridApiRef();
+const NurseTable: React.FC<NurseTableProps> = ({nurses, onEdit, onDelete}) => {
+    // Create a unique key based on ward IDs and timestamps
+    const dataKey = React.useMemo(() => {
+        return nurses.map(n => `${n.id}-${n.modified_at}`).join('|');
+    }, [nurses]);
 
-    // Save the grid state to sessionStorage when state changes
-    useEffect(() => {
-        const handleStateChange = (params: any) => {
-            sessionStorage.setItem('nursesTableState', JSON.stringify(params));
-        };
+    // Retrieve and parse saved state safely
+    const savedState = React.useMemo(() => {
+        try {
+            const state = JSON.parse(sessionStorage.getItem('nursesTableState') || '{}');
+            return {
+                ...state,
+                pagination: {
+                    paginationModel: {
+                        pageSize: state.pagination?.paginationModel?.pageSize || 10,
+                        page: state.pagination?.paginationModel?.page || 0,
+                    },
+                },
+            };
+        } catch {
+            return {
+                pagination: { paginationModel: { pageSize: 10 } },
+                sorting: { sortModel: [{ field: 'full_name', sort: 'asc' }] },
+            };
+        }
+    }, []);
 
-        const unsubscribe = apiRef.current?.subscribeEvent('stateChange', handleStateChange);
 
-        return () => {
-            if (unsubscribe) unsubscribe();
-        };
-    }, [apiRef]);
-
-    // Retrieve saved state from sessionStorage (if it exists)
-    const savedState = JSON.parse(sessionStorage.getItem('nursesTableState') || 'null');
+    // Handle state persistence on sort/filter/page change
+    const handleStateChange = (state: any) => {
+        sessionStorage.setItem('nursesTableState', JSON.stringify(state));
+    };
 
     const columns: GridColDef<Nurse>[] = [
         {
@@ -81,7 +95,39 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
         {
             field: 'ward_name',
             headerName: 'Ward',
-            width: 150
+            width: 180,
+            renderCell: (params) => {
+                const wardColor = params.row.ward_color;
+                return (
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                        <Tooltip title={wardColor || 'No color'} arrow placement="top" slotProps={{
+                            tooltip: {
+                                sx: {
+                                    backgroundColor: 'common.black',
+                                    fontSize: '0.875rem',
+                                    padding: '6px 12px',
+                                    marginBottom: '8px !important'
+                                }
+                            },
+                            arrow: {
+                                sx: {
+                                    color: 'common.black'
+                                }
+                            }
+                        }}>
+                            <div style={{
+                                backgroundColor: wardColor,
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd',
+                                cursor: 'help'
+                            }}/>
+                        </Tooltip>
+                        <span>{params.value}</span>
+                    </Box>
+                );
+            }
         },
         {
             field: 'email',
@@ -107,14 +153,14 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
             width: 120,
             getActions: (params: GridRowParams<Nurse>) => [
                 <GridActionsCellItem
-                    icon={<EditIcon />}
+                    icon={<EditIcon/>}
                     label="Edit"
                     onClick={() => onEdit(params.row)}
                     color="inherit"
                 />,
                 <span>
                     <GridActionsCellItem
-                        icon={<DeleteIcon />}
+                        icon={<DeleteIcon/>}
                         label="Delete"
                         onClick={() => onDelete(params.row.id, params.row.full_name)}
                         color="inherit"
@@ -124,29 +170,9 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
         },
     ];
 
-    const getInitialState = () => {
-        const defaultState = {
-            pagination: {
-                paginationModel: { pageSize: 10, page: 0 },
-            },
-            sorting: { sortModel: [{ field: 'full_name', sort: 'asc' }] },
-        };
-
-        if (!savedState) return defaultState;
-
-        return {
-            ...savedState,
-            pagination: {
-                paginationModel: {
-                    pageSize: savedState.pagination?.paginationModel?.pageSize || 10,
-                    page: savedState.pagination?.paginationModel?.page || 0,
-                },
-            },
-        };
-    };
 
     return (
-        <Paper style={{ height: 600, width: '100%' }}>
+        <Paper style={{height: 600, width: '100%'}}>
             <DataGrid
                 rows={nurses}
                 columns={columns}
@@ -154,11 +180,13 @@ const NurseTable: React.FC<NurseTableProps> = ({ nurses, onEdit, onDelete }) => 
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                apiRef={apiRef}
-                initialState={getInitialState()}
+                initialState={savedState}
+                onStateChange={handleStateChange}
                 disableColumnMenu={false}
                 disableColumnSelector={false}
                 disableDensitySelector={false}
+                key={dataKey}
+                getRowId={(row) => row.id}
             />
         </Paper>
     );

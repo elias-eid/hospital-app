@@ -47,6 +47,7 @@ export interface Nurse {
     email: string;
     ward_id: number;
     ward_name: string;
+    ward_color: string;
     created_at: string;
     modified_at: string;
 }

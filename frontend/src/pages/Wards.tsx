@@ -18,11 +18,11 @@ import DeleteDialog from '../components/deletedialog/DeleteDialog';
 import SnackbarAlert from '../components/snackbaralert/SnackbarAlert';
 import {Box, CircularProgress, Dialog, DialogTitle, Fab, Typography} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useWards } from '../contexts/WardsContext';
+import {useApp} from "../contexts/AppContext";
 import { Ward } from '../types'
 
 const Wards: React.FC = () => {
-    const { wards, loading, refreshWards } = useWards();
+    const { nurses, wards, loading, refreshNurses, refreshWards } = useApp();
     const [open, setOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
@@ -58,6 +58,7 @@ const Wards: React.FC = () => {
         setErrorName(null);
         setErrorColor(null);
     };
+
 
     // Function to handle saving a ward with proper validation
     const handleSaveWard = async () => {
