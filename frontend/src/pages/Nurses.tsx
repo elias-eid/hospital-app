@@ -22,7 +22,7 @@ import { useApp } from '../contexts/AppContext';
 import { Nurse } from '../types';
 
 const Nurses: React.FC = () => {
-    const { nurses, wards, loading, refreshNurses, refreshWards } = useApp();
+    const { nurses, loading, refreshNurses} = useApp();
     const [open, setOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedNurse, setSelectedNurse] = useState<Nurse | null>(null);
