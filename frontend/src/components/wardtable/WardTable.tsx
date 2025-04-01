@@ -13,7 +13,7 @@
  *
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     DataGrid,
     GridColDef,
@@ -41,7 +41,12 @@ const WardTable: React.FC<WardTableProps> = ({ wards, onEdit, onDelete }) => {
     // Retrieve and parse saved state safely
     const savedState = React.useMemo(() => {
         try {
-            const state = JSON.parse(sessionStorage.getItem('wardsTableState') || '{}');
+            const state = JSON.parse(sessionStorage.getItem('wardsTableState') || '{pagination: {\n' +
+                '                    paginationModel: {\n' +
+                '                        pageSize: state.pagination?.paginationModel?.pageSize || 10,\n' +
+                '                        page: state.pagination?.paginationModel?.page || 0,\n' +
+                '                    },\n' +
+                '                }}');
             return {
                 ...state,
                 pagination: {

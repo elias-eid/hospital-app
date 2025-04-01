@@ -13,14 +13,13 @@
  *
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
     DataGrid,
     GridColDef,
     GridActionsCellItem,
     GridToolbar,
     GridRowParams,
-    useGridApiRef
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -42,7 +41,12 @@ const NurseTable: React.FC<NurseTableProps> = ({nurses, onEdit, onDelete}) => {
     // Retrieve and parse saved state safely
     const savedState = React.useMemo(() => {
         try {
-            const state = JSON.parse(sessionStorage.getItem('nursesTableState') || '{}');
+            const state = JSON.parse(sessionStorage.getItem('nursesTableState') || '{pagination: {\n' +
+                '                    paginationModel: {\n' +
+                '                        pageSize: state.pagination?.paginationModel?.pageSize || 10,\n' +
+                '                        page: state.pagination?.paginationModel?.page || 0,\n' +
+                '                    },\n' +
+                '                }}');
             return {
                 ...state,
                 pagination: {

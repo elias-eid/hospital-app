@@ -40,7 +40,6 @@ import {
     Box,
     Tooltip
 } from '@mui/material';
-import {Ward} from '../../types';
 import {useApp} from "../../contexts/AppContext";
 
 interface NurseFormProps {
