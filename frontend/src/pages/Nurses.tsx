@@ -127,7 +127,7 @@ const Nurses: React.FC = () => {
 
         // Check if email is unique before saving
         const emailExists = await checkEmailUniqueness(email);
-        if (emailExists) {
+        if (!isEdit && emailExists) {
             setErrorEmail('Email is already in use');
             return;
         }
